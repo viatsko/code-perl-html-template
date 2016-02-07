@@ -2,7 +2,7 @@
 	"name": "perl-html-template",
 	"displayName": "Perl HTML Template",
 	"description": "Perl HTML Template support",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "viatsko",
 	"engines": {
 		"vscode": "^0.10.6"
