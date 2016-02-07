@@ -170,7 +170,7 @@
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#expression-pearl-method</string>
+					<string>#expression-perl-method</string>
 				</dict>
 				<dict>
 					<key>include</key>
