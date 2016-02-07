@@ -69,7 +69,7 @@
 	</array>
 	<key>repository</key>
 	<dict>
-		<key>expression-pearl-method</key>
+		<key>expression-perl-method</key>
 		<dict>
 			<key>match</key>
 			<string>\b[a-zA-Z0-0-_]+(?=\(.*\))</string>
