@@ -1,0 +1,26 @@
+{
+	"name": "perl-html-template",
+	"displayName": "Perl HTML Template",
+	"description": "Perl HTML Template support",
+	"version": "1.0.0",
+	"publisher": "viatsko",
+	"engines": {
+		"vscode": "^0.10.6"
+	},
+	"categories": [
+		"Languages"
+	],
+	"contributes": {
+		"languages": [{
+			"id": "perl-html-template",
+			"aliases": ["Perl HTML Template", "perl-html-template"],
+			"extensions": [".tmpl",".inc"],
+			"configuration": "./perl-html-template.configuration.json"
+		}],
+		"grammars": [{
+			"language": "perl-html-template",
+			"scopeName": "text.html.html-template",
+			"path": "./syntaxes/perl-html-template.tmLanguage"
+		}]
+	}
+}
