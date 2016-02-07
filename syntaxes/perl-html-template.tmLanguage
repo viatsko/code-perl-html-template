@@ -5,22 +5,62 @@
 	<key>fileTypes</key>
 	<array>
 		<string>tmpl</string>
+		<string>inc</string>
 	</array>
-	<key>firstLineMatch</key>
-	<string>&lt;(?i:TMPL)_.+?&gt;</string>
 	<key>foldingStartMarker</key>
-	<string>(&lt;(?i:(head|table|tr|div|style|script|ul|ol|form|dl))\b.*?&gt;|^ *&lt;(?i:TMPL_(?:LOOP|UNLESS|IF))\b(?!.*&lt;/(?i:TMPL_(?:LOOP|UNLESS|IF))&gt;))</string>
+	<string>&lt;(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|li|form|dl)\b.*?&gt;|&lt;!--(?!.*--\s*&gt;)|^&lt;!--\ \#tminclude\ (?&gt;.*?--&gt;)$|&lt;\?(?:php)?.*\b(if|for(each)?|while)\b.+:|\{\{?(if|foreach|capture|literal|foreach|php|section|strip)|\{\s*($|\?&gt;\s*$|//|/\*(.*\*/\s*$|(?!.*?\*/))))</string>
 	<key>foldingStopMarker</key>
-	<string>(&lt;/(?i:(head|table|tr|div|style|script|ul|ol|form|dl))&gt;|^ *&lt;/(?i:TMPL_(?:LOOP|UNLESS|IF)) *&gt;)</string>
+	<string>(&lt;/(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|li|form|dl)&gt;|^(?!.*?&lt;!--).*?--\s*&gt;|^&lt;!--\ end\ tminclude\ --&gt;$|&lt;\?(?:php)?.*\bend(if|for(each)?|while)\b|\{\{?/(if|foreach|capture|literal|foreach|php|section|strip)|^[^{]*\})</string>
 	<key>keyEquivalent</key>
 	<string>^~H</string>
 	<key>name</key>
-	<string>Perl HTML-Template</string>
+	<string>HTML Templates</string>
 	<key>patterns</key>
 	<array>
 		<dict>
+			<key>begin</key>
+			<string>(&lt;)(TMPL_COMMENT)(&gt;)</string>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.tag.end.html.html-template</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.type.html.html-template</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.tag.begin.html.html-template</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(&lt;/)(TMPL_COMMENT)(&gt;)</string>
+			<key>name</key>
+			<string>meta.tag.block.any.html.html-template</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>&lt;TMPL_.*?&gt;</string>
+					<key>name</key>
+					<string>invalid.illegal.bad-comments-or-CDATA.html</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>.*?</string>
+					<key>name</key>
+					<string>comment.block.html</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
 			<key>include</key>
-			<string>#tmpl-container-tag</string>
+			<string>#tmpl-tags</string>
 		</dict>
 		<dict>
 			<key>include</key>
@@ -29,54 +69,108 @@
 	</array>
 	<key>repository</key>
 	<dict>
-		<key>embedded-code</key>
-		<dict/>
-		<key>entities</key>
+		<key>expression-pearl-method</key>
 		<dict>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>captures</key>
-					<dict>
-						<key>1</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.constant.html</string>
-						</dict>
-						<key>3</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.constant.html</string>
-						</dict>
-					</dict>
-					<key>match</key>
-					<string>(&amp;)([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+)(;)</string>
-					<key>name</key>
-					<string>constant.character.entity.html</string>
-				</dict>
-				<dict>
-					<key>match</key>
-					<string>&amp;</string>
-					<key>name</key>
-					<string>invalid.illegal.bad-ampersand.html</string>
-				</dict>
-			</array>
+			<key>match</key>
+			<string>\b[a-zA-Z0-0-_]+(?=\(.*\))</string>
+			<key>name</key>
+			<string>entity.name.function.perl.expression.html.html-template</string>
 		</dict>
-		<key>html-template-stuff</key>
+		<key>number</key>
 		<dict>
+			<key>match</key>
+			<string>\s+\d</string>
+			<key>name</key>
+			<string>constant.numeric</string>
+		</dict>
+		<key>string-double-quoted</key>
+		<dict>
+			<key>begin</key>
+			<string>"</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.begin.html.html-template</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>"</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.end.html.html-template</string>
+				</dict>
+			</dict>
+			<key>name</key>
+			<string>string.quoted.double.html</string>
+		</dict>
+		<key>string-single-quoted</key>
+		<dict>
+			<key>begin</key>
+			<string>'</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.begin.html.html-template</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>'</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.end.html.html-template</string>
+				</dict>
+			</dict>
+			<key>name</key>
+			<string>string.quoted.single.html</string>
+		</dict>
+		<key>tag-perl-attribute</key>
+		<dict>
+			<key>match</key>
+			<string>\b([a-zA-Z:-]{1,})(?==)</string>
+			<key>name</key>
+			<string>entity.other.attribute-name.html</string>
+		</dict>
+		<key>tag-perl-expression</key>
+		<dict>
+			<key>begin</key>
+			<string>\[%</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.perl.expression.start.html.html-template</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>%\]</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.perl.expression.end.html.html-template</string>
+				</dict>
+			</dict>
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>match</key>
-					<string>\b(?i:NAME|ESCAPE|DEFAULT|)\b</string>
-					<key>name</key>
-					<string>keyword.control.html-template</string>
+					<key>include</key>
+					<string>#tag-perl-keyword</string>
 				</dict>
 				<dict>
-					<key>match</key>
-					<string>=</string>
-					<key>name</key>
-					<string>punctuation.separator.key-value.html-template</string>
+					<key>include</key>
+					<string>#expression-pearl-method</string>
 				</dict>
 				<dict>
 					<key>include</key>
@@ -88,130 +182,89 @@
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#keyword</string>
+					<string>#number</string>
 				</dict>
 			</array>
 		</dict>
-		<key>keyword</key>
+		<key>tag-perl-keyword</key>
 		<dict>
 			<key>match</key>
-			<string>\b([A-Za-z0-9_]+)</string>
+			<string>(\s+(eq|ne|or|and|not)|=~|&amp;&amp;|==|\|\||!~|&lt;=?|[^-]&gt;=?)</string>
 			<key>name</key>
-			<string>string.unquoted.html-template</string>
+			<string>keyword.perl.expression.html.html-template</string>
 		</dict>
-		<key>string-double-quoted</key>
+		<key>tag-perl-options</key>
 		<dict>
-			<key>begin</key>
-			<string>"</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.string.begin.html-template</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>"</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.string.end.html-template</string>
-				</dict>
-			</dict>
+			<key>match</key>
+			<string>\b([A-Z_]{1,})</string>
 			<key>name</key>
-			<string>string.quoted.double.html-template</string>
+			<string>entity.other.attribute-name.html</string>
+		</dict>
+		<key>tmpl-tag-stuff</key>
+		<dict>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>include</key>
-					<string>#embedded-code</string>
+					<string>#tag-perl-attribute</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#entities</string>
+					<string>#string-single-quoted</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#string-double-quoted</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tag-perl-options</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tag-perl-expression</string>
 				</dict>
 			</array>
 		</dict>
-		<key>string-single-quoted</key>
+		<key>tmpl-tags</key>
 		<dict>
 			<key>begin</key>
-			<string>'</string>
+			<string>(&lt;[/~]?)(TMPL_(?i:[a-zA-Z]+)\b)</string>
 			<key>beginCaptures</key>
 			<dict>
-				<key>0</key>
+				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>punctuation.definition.string.begin.html-template</string>
+					<string>entity.name.tag.begin.html.html-template</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.type.html.html-template</string>
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>'</string>
+			<string>([~]?&gt;)</string>
 			<key>endCaptures</key>
 			<dict>
-				<key>0</key>
+				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>punctuation.definition.string.end.html-template</string>
+					<string>entity.name.tag.end.html.html-template</string>
 				</dict>
 			</dict>
 			<key>name</key>
-			<string>string.quoted.single.html-template</string>
+			<string>meta.tag.block.any.html.html-template</string>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>include</key>
-					<string>#embedded-code</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#entities</string>
-				</dict>
-			</array>
-		</dict>
-		<key>tmpl-container-tag</key>
-		<dict>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>begin</key>
-					<string>&lt;/?(?i:TMPL_(?i:[a-zA-Z]+)\\b)</string>
-					<key>captures</key>
-					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.tag.html-template</string>
-						</dict>
-					</dict>
-					<key>end</key>
-					<string>&gt;</string>
-					<key>name</key>
-					<string>meta.tag.template.html-template</string>
-					<key>patterns</key>
-					<array>
-						<dict>
-							<key>include</key>
-							<string>#html-template-stuff</string>
-						</dict>
-					</array>
-				</dict>
-				<dict>
-					<key>begin</key>
-					<string>&lt;/?(?i:TMPL_(?i:[a-zA-Z]+)\\b)</string>
-					<key>end</key>
-					<string>&gt;</string>
-					<key>name</key>
-					<string>invalid.illegal.tag.template.html-template</string>
+					<string>#tmpl-tag-stuff</string>
 				</dict>
 			</array>
 		</dict>
 	</dict>
 	<key>scopeName</key>
 	<string>text.html.html-template</string>
-	<key>uuid</key>
-	<string>79287EAC-597A-480D-974C-837440298571</string>
 </dict>
 </plist>
